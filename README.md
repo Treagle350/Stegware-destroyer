@@ -17,3 +17,6 @@ You need to install the following packages to be able to use the scripts :
 
 * Ffmpeg
 > Installable via package manager.
+
+### Project status
+This project works but has not been rigorously tested yet, consider it to be a prototype/concept more than a finished version as of now.
