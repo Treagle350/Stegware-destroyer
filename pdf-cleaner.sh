@@ -14,7 +14,6 @@ while [[ $# -ne 0 ]]; do
 
 	echo "Cleaning individual PNG files..."
 
-	#Todo lookup how to properly escape * wildcards
 	./ffmpeg-file-cleaner.sh "/tmp/temp-imgs-pdf-conversion/out-$current_file"*".png"
 	img2pdf "/tmp/temp-imgs-pdf-conversion/"*".png" -o "/tmp/temp-imgs-pdf-conversion/converted-pdf-out.pdf"
 	cp "/tmp/temp-imgs-pdf-conversion/converted-pdf-out.pdf" "$1"
