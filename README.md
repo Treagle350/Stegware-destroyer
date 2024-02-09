@@ -4,6 +4,9 @@ A set of bash (linux) scripts that remove stegware from documents. The script **
 >[!WARNING]
 >Keep the scripts stored in the same folder, some scripts reference one another. By default they expect the others to be in the same folder.
 
+> [!CAUTION]
+> By default the scripts overwrite and replace the input file.
+
 ## Prerequisites
 You need to install the following packages to be able to use the scripts :
 * Poppler-utils
