@@ -18,5 +18,10 @@ You need to install the following packages to be able to use the scripts :
 * Ffmpeg
 > Installable via package manager.
 
+## Running
+1. Download the files **ffmpeg-file-cleaner.sh** and **pdf-cleaner.sh** and open a terminal in the folder of the files
+2. Run the command **chmod +x ffmpeg-file-cleaner.sh && chmod +x pdf-cleaner.sh** in the terminal to make the scripts executable
+3. Execute the scripts with **"./ffmpeg-file-cleaner.sh"** and **"./pdf-cleaner.sh"** respectively
+
 ### Project status
 This project works but has not been rigorously tested yet to prove its efficiency in stegware/malware removal, consider it to be a prototype/concept more than a finished version as of now.
