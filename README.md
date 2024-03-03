@@ -8,20 +8,17 @@ Upon first running the program it creates two folders in the Downloads folder of
 
 ## Prerequisites
 You need to install the following packages to be able to use the scripts :
-* Poppler-utils
-> Installable via package manager. Also known as **poppler-utils** in Debian, Ubuntu, Mint, RHEL, CentOS, Fedora. Also known as **poppler-tools** in OpenSUSE. Also known as **poppler** in Arch, Alpine.
-
-```sudo apt install poppler-utils```
 
 * Ffmpeg
 > Installable via package manager.
 
 ```sudo apt install ffmpeg```
 
-* Pillow (PIL) Python package
+* [Pillow](https://pypi.org/project/pillow/) (PIL) Python package
+* [Fitz](https://pypi.org/project/PyMuPDF/) (PyMuPDF) Python package
 > Installable with pip
 
-```sudo apt install python3-pip && pip install Pillow```
+```sudo apt install python3-pip && pip install Pillow && pip install PyMuPDF```
 
 ## Running
 ```python3 stegware-destroyer.py```
