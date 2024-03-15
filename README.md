@@ -15,10 +15,11 @@ You need to install the following packages to be able to use the scripts :
 ```sudo apt install ffmpeg```
 
 * [Pillow](https://pypi.org/project/pillow/) (PIL) Python package
-* [Fitz](https://pypi.org/project/PyMuPDF/) (PyMuPDF) Python package
+* [PyMuPDF](https://pypi.org/project/PyMuPDF/) (Fitz) Python package
+* [Fleep](https://pypi.org/project/fleep/) (fleep) Python package
 > Installable with pip
 
-```sudo apt install python3-pip && pip install Pillow && pip install PyMuPDF```
+```sudo apt install python3-pip && pip install Pillow && pip install PyMuPDF && pip install fleep```
 
 ## Running
 ```python3 stegware-destroyer.py```
