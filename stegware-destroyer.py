@@ -2,6 +2,7 @@ import os
 import subprocess
 from PIL import Image
 import fitz
+import fleep
 
 input_dir = "Dirty-Stegware-Folder"
 tmp_dir = "Temporary-stegware-processing-folder"
@@ -45,11 +46,20 @@ def filename_cleaner(dirty_file):
     for each_seperate_character in dirty_filename_without_extension:
         if each_seperate_character.isalnum():
             clean_filename += each_seperate_character
+        elif each_seperate_character.isspace():
+            clean_filename += each_seperate_character
         else:
             clean_filename += "_"
     clean_filename_with_directory = os.path.join(dirty_file_folder, clean_filename)
     os.rename(dirty_file, clean_filename_with_directory)
     return clean_filename_with_directory
+
+def filetype_verification(file):
+    #Read file in binary mode
+    file_contents = open(file, 'rb')
+    file_header = file_contents.read(128)
+    filetype = fleep.get(file_header)
+    return filetype
 
 def pdf_cleaner(filename_dirty_pdf):
     verified_file_extension = "pdf"
@@ -59,7 +69,7 @@ def pdf_cleaner(filename_dirty_pdf):
     #PDF -> PNG
     dirty_pdf = fitz.open(filename_dirty_pdf)
     for each_page in dirty_pdf:
-        current_pdf_page_pixel_map = each_page.get_pixmap(dpi=300, colorspace=fitz.csRGB, alpha=False)
+        current_pdf_page_pixel_map = each_page.get_pixmap(dpi=144, colorspace=fitz.csRGB, alpha=False)
         #Formatting png names so they can be sorted
         page_number = str(each_page.number)
         number_of_formatting_characters = len(str(dirty_pdf.page_count))
@@ -79,18 +89,21 @@ def pdf_cleaner(filename_dirty_pdf):
     delete_directory(os.path.join(download_path, tmp_dir))
 
 def stegware_file_parser(clean_filename_dirty_file):
-    file_verification_output = subprocess.run(["file", clean_filename_dirty_file], stdout=subprocess.PIPE).stdout.decode('utf-8')
+    file_verification_output = filetype_verification(clean_filename_dirty_file)
     clean_filename = os.path.basename(clean_filename_dirty_file)
-    if file_verification_output[:len(clean_filename_dirty_file)+len(": JPEG image data")] == (clean_filename_dirty_file + ": JPEG image data"):
+    if file_verification_output.extension_matches('jpg'):
         verified_file_extension = "jpg"
-        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", "-vframes", "1", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
-    elif file_verification_output[:len(clean_filename_dirty_file) + len(": PNG image data")] == (clean_filename_dirty_file + ": PNG image data"):
+        subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", "-vframes", "1", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
+    elif file_verification_output.extension_matches('png'):
         verified_file_extension = "png"
-        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", "-vframes", "1", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
-    elif file_verification_output[:len(clean_filename_dirty_file) + len(": ISO Media, MP4")] == (clean_filename_dirty_file + ": ISO Media, MP4"):
+        subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", "-vframes", "1", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
+    elif file_verification_output.extension_matches('mp4'):
         verified_file_extension = "mp4"
-        subprocess.run(["ffmpeg", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
-    elif file_verification_output[:len(clean_filename_dirty_file) + len(": PDF document, version")] == (clean_filename_dirty_file + ": PDF document, version"):
+        subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
+    elif file_verification_output.extension_matches('m4v'):
+        verified_file_extension = "m4v"
+        subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error", "-i", clean_filename_dirty_file, "-c", "copy", download_path + "/" + output_dir + "/" + clean_filename + "." + verified_file_extension])
+    elif file_verification_output.extension_matches('pdf'):
         pdf_cleaner(clean_filename_dirty_file)
     else:
         print("Unsupported filetype, exiting...")
@@ -104,5 +117,6 @@ create_directory(os.path.join(download_path, output_dir))
 dirty_file_list, directory_list = list_all_files_in_directory(os.path.join(download_path, input_dir))
 for dirty_file in dirty_file_list:
     clean_filename_of_dirty_file = filename_cleaner(dirty_file)
+    #Optimise for background operation
     stegware_file_parser(clean_filename_of_dirty_file)
 #delete_directory(os.path.join(download_path, input_dir))
